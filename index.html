@@ -1,12 +1,12 @@
 <!doctype html>
 <html>
   <head>
-    <title>Self destructing todo app</title>
-    <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+    <title>Pomodoro</title>
+    <link href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet" type="text/css">
     <link rel="stylesheet" type="text/css" href="app/stylesheets/custom.css">
         
   </head>
-  <body ng-app='todoApp' ng-controller='mainCtrl'>
+  <body ng-app='pomodoroApp' ng-controller='mainCtrl'>
     <header>
       <nav class="navbar navbar-default">
         <ul class="nav navbar-nav">
@@ -17,40 +17,33 @@
       </nav>
     </header>
 
-    <div class="container">
-      <div class="row">  
-        <input type="checkbox" ng-model="checkbox">Show expired Tasks?</input>
-        <table class="table table-striped">
-          <tr>
-            <th>Items</th>
-            <th>Date Added</th>
-            <th>Days Left</th>
-            <th>Status</th>
-          </tr>
-          <tr ng-repeat="todo in todos" ng-show="!checkbox && todo.isCurrent() || checkbox && !todo.isCurrent()">
-            <td>{{todo.item}}</td>
-            <td>{{todo.date | date:'yyyy-MM-dd' }}</td>
-            <td ng-class="{'task-expired': todo.daysLeft() < 0}">{{todo.daysLeft() | number:0}}</td>
-            <td>
-              <button class="btn btn-success" ng-click="deleteTodo($index)">Done</button>
-            </td>
-          </tr>
-        </table>
-        
-        <form ng-submit="addTodo()" style="text-align:center;">
-          <input type="text" ng-model="newItem" placeholder="Add a new item"></input>
-          <button class="btn btn-primary" type="submit">Save</button> 
-        </form>
-      </div>
+    <div class="container main-section">
+      <div class="row">
+        <div class="col-md-8 col-md-offset-2">
+          <div class="col-md-6">
+            <h1> {{mainMinutes}}:{{mainSeconds}}</h1>
+            <button class="btn btn-primary" ng-click="startMainTimer()">Start Timer</button>
+            <button class="btn btn-danger" ng-click="stopMainTimer()">Stop Timer</button>
+            <button class="btn btn-warning" ng-click="resetMainTimer()">Reset Timer</button>
+          </div>
+
+          <div class="col-md-6">  
+            <h1> {{breakMinutes}}:{{breakSeconds}}</h1>
+            <button class="btn btn-primary" ng-click="startBreakTimer()">Start Break</button>
+            <button class="btn btn-danger" ng-click="stopBreakTimer()">Stop Timer</button>
+            <button class="btn btn-warning" ng-click="resetBreakTimer()">Reset Timer</button>
+          </div> 
+        </div>
+      </div>     
     </div>
 
           
 
     <!-- AngularJS -->
-    <script src="/scripts/angular.min.js"></script>
-    <script src="/scripts/angular-route.js"></script>
+    <script src="scripts/angular.min.js"></script>
+    <script src="scripts/angular-route.js"></script>
 
-    <script src="/app/app.js"></script>
-    <script src="/app/controllers/mainCtrl.js"></script>
+    <script src="app/app.js"></script>
+    <script src="app/controllers/mainCtrl.js"></script>
   </body>
 </html>

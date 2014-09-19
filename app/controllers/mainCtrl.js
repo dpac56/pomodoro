@@ -1,50 +1,71 @@
 (function(){
-
-  //variables initiated not in controller
-  var oneWeekInEpoch = 604800000;
   
-  function TodoItem(item, date, timeLimit) {
-    this.item = item;
-    this.date = date;
-    this.timeLimit = timeLimit;
-  }
-
-  TodoItem.prototype.daysLeft = function () {
-    return (7-(Date.now() - this.date)/(1000*24*60*60));
-  };
-  TodoItem.prototype.isCurrent = function(){
-    return Date.now() - this.date < this.timeLimit;
-  };
-
   //controller starts
-  var mainCtrl = function($scope){
-    $scope.todos = [
-      new TodoItem("Item 1", 1310763878804, oneWeekInEpoch),
-      new TodoItem("Item 2", 1410763878804, oneWeekInEpoch),
-      //Another way to add items
-      //{item: "Item 3", date: 1410763878804, daysLeft: function () { return (7-(Date.now() - this.date)/(1000*24*60*60))}},
-      ];
+  var mainCtrl = function($scope, $interval){
 
-    //$scope.dateNow = Date.now();
+    $scope.breakSeconds = 0;
+    $scope.breakMinutes = 0;
 
-    $scope.addTodo = function(){
+    $scope.mainSeconds = 0;
+    $scope.mainMinutes = 0;
 
-        var dateWhenItemAdded = Date.now();
-
-        $scope.todos.push(new TodoItem($scope.newItem, dateWhenItemAdded, oneWeekInEpoch));
-
-        $scope.newItem = '';
+    var secondsToMinutes = function(){
+          if ($scope.breakSeconds == 60){
+            $scope.breakSeconds = 0;
+            $scope.breakMinutes++
+          }
+          $scope.breakSeconds++;
       };
 
-    $scope.deleteTodo = function($index){
-        $scope.todos.splice($index, 1);
+    /*var secondsToMinutes = function(seconds, minutes){
+          if (seconds == 60){
+            seconds = 0;
+            minutes++
+          }
+          seconds++;
+      };*/
+
+    $scope.startBreakTimer = function(){
+        breakTimer = $interval(secondsToMinutes, 1000, 300);
+      };
+
+    $scope.stopBreakTimer = function(){
+        $interval.cancel(breakTimer);
+      };
+
+    $scope.resetBreakTimer = function(){
+        $interval.cancel(breakTimer);
+        $scope.breakSeconds = 0;
+        $scope.breakMinutes = 0;
+      };
+
+
+
+    $scope.startMainTimer = function(){
+      mainTimer = $interval(function(){
+          if ($scope.mainSeconds == 60){
+            $scope.mainSeconds = 0;
+            $scope.mainMinutes++
+          }
+          $scope.mainSeconds++;
+        }, 1000, 1500);
+      };
+
+    $scope.stopMainTimer = function(){
+        $interval.cancel(mainTimer);
+      };
+
+    $scope.resetMainTimer = function(){
+        $interval.cancel(mainTimer);
+        $scope.mainSeconds = 0;
+        $scope.mainMinutes = 0;
       };
 
     };
 
-  mainCtrl.$inject = ['$scope'];
+  mainCtrl.$inject = ['$scope', '$interval'];
 
-  angular.module('todoApp')
+  angular.module('pomodoroApp')
     .controller('mainCtrl', mainCtrl);
 
 }());
